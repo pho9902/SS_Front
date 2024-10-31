@@ -1,4 +1,4 @@
-import Login from "./Login";
+import LoginModal from "./LoginModal";
 import Regist from "./Regist";
 
-export { Login, Regist };
+export { LoginModal, Regist };

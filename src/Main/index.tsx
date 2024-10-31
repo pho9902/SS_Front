@@ -1,17 +1,19 @@
 import { useState } from "react";
 import * as Auth from "../Auth";
+import * as S from "./style";
 
 export default function Main() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
-      <div>
-        <h3>헤더</h3>
-        <div onClick={() => setIsOpen(!isOpen)}>로그인/회원가입</div>
-      </div>
+    <S.Wrap>
+      <S.Header>
+        <S.Logo>헤더</S.Logo>
+        <S.Auth onClick={() => setIsOpen(!isOpen)}>로그인/회원가입</S.Auth>
+      </S.Header>
 
-      {isOpen && <Auth.Login />}
-    </div>
+      <S.Choice>기기선택</S.Choice>
+      {isOpen && <Auth.LoginModal />}
+    </S.Wrap>
   );
 }
