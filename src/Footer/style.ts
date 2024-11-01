@@ -1,19 +1,21 @@
 import styled from "styled-components";
 
 export const Footer = styled.div`
-  border: 1px solid;
-  position: absolute;
+  border-top: 1px solid lightgray;
+  background-color: white;
+  position: fixed;
   bottom: 0;
   display: flex;
-  width: 95.5%;
-
+  width: 100%;
   justify-content: space-between;
 `;
 
-export const EachFooterBtn = styled.div`
-  border: 1px solid red;
-`;
-export const FooterHomeBtn = styled.div`
-  border: 2px solid blue;
-  border-radius: 50%;
+export const EachFooterBtn = styled.div``;
+export const HomeBtnBox = styled.div``;
+
+export const BtnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
