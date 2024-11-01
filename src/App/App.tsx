@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Main from "./Main";
-import { Regist } from "./Auth";
-import Choice from "./Choice";
-import Machine from "./Machine";
+import * as S from "./style";
+import Main from "../Main";
+import { Regist } from "../Auth";
+import Choice from "../Choice";
+import Machine from "../Machine";
 
 export default function App() {
   return (
-    <div>
+    <S.GlobalWrap>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/machine/:machineNum" element={<Machine />} />
         </Routes>
       </BrowserRouter>
-    </div>
+      <S.Footer>footer</S.Footer>
+    </S.GlobalWrap>
   );
 }

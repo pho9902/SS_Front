@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import * as S from "./style";
 
-export default function LoginModal() {
+interface Props {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function LoginModal({ setIsOpen }: Props) {
   return (
-    <S.Wrap>
+    <S.Wrap onClick={() => setIsOpen(false)}>
       <S.Body>
         <div>Form 인풋 인풋</div>
         <button>로그인</button>

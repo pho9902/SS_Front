@@ -4,7 +4,7 @@ import * as S from "./style";
 import { Link } from "react-router-dom";
 
 export default function Main() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <S.Wrap>
@@ -16,7 +16,7 @@ export default function Main() {
         <S.Choice>기기선택</S.Choice>
       </Link>
 
-      {isOpen && <Auth.LoginModal />}
+      {isOpen && <Auth.LoginModal setIsOpen={setIsOpen} />}
     </S.Wrap>
   );
 }
