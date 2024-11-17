@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as S from "./style";
 import { Auth } from "../../api";
 import { useState } from "react";
@@ -6,10 +6,15 @@ import { useState } from "react";
 export default function Login() {
   const [id, setId ] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const navigate = useNavigate();
 
   function authLogin(id: string, password: string) {
     console.log(id, password)
-    Auth.login(id, password).then(res => console.log(res)).catch(err => console.log(err))
+    Auth.login(id, password).then(res => {
+      sessionStorage.setItem("accessToken", res.data.accessToken);
+      navigate('/')    
+      navigate(0)
+    }).catch(err => console.log(err))
   }
 
   return (
