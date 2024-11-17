@@ -1,28 +1,24 @@
+import { Auth } from "../../api";
 import * as S from "./style";
 import { useRef, useState } from "react";
 
-export default function Regist() {
-  const sDummy = {
-    id: "aa1234",
-    pw: "as33",
-  };
-  const fDummy = [
-    {
-      id: "a",
-      pw: "as33",
-      // 아이디가 짧음 최소 2자
-    },
-    {
-      id: "aasdfkjasdoifhjdsiofh123",
-      pw: "as33",
-      //아이디 김 최대 8자
-    },
-  ];
+interface RegisterInfo {
+  username: string | undefined;
+  password: string | undefined;
+  adress: string | undefined;
+  adress_detail: string | undefined;
+}
 
+export default function Regist() {
   const [isIdWrong, setIsIdWrong] = useState<boolean>(false);
   const idRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const adressRef = useRef<HTMLInputElement>(null);
+  const adressDetailRef = useRef<HTMLInputElement>(null);
 
+  function authRegister(info: RegisterInfo) {
+    Auth.register(info).then(res => console.log(res)).catch(err => console.log(err))
+  }
   return (
     <S.Wrap>
       <S.Title>회원가입</S.Title>
@@ -34,12 +30,25 @@ export default function Regist() {
         <S.Label>PassWord</S.Label>
         <S.Input ref={passwordRef}></S.Input>
       </S.FormBox>
-      <div>주소</div>
+      <S.FormBox>
+        <S.Label>주소</S.Label>
+        <S.Input ref={adressRef}></S.Input>
+      </S.FormBox>
+      <S.FormBox>
+        <S.Label>상세주소</S.Label>
+        <S.Input ref={adressDetailRef}></S.Input>
+      </S.FormBox>
       <S.BtnBox>
         <S.Btn
           onClick={() => {
-            console.log(idRef.current?.value, passwordRef.current?.value);
-          }}
+              authRegister({
+                username: idRef.current?.value,
+                password: passwordRef.current?.value,
+                adress: adressRef.current?.value,
+                adress_detail: adressDetailRef.current?.value
+              })
+            }
+        }
         >
           회원가입
         </S.Btn>

@@ -11,6 +11,7 @@ export default function Login() {
     console.log(id, password)
     Auth.login(id, password).then(res => console.log(res)).catch(err => console.log(err))
   }
+
   return (
     <S.Wrap>
       <S.Title>로그인</S.Title>
