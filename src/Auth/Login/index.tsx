@@ -9,9 +9,9 @@ export default function Login() {
   const navigate = useNavigate();
 
   function authLogin(id: string, password: string) {
-    console.log(id, password)
     Auth.login(id, password).then(res => {
       sessionStorage.setItem("accessToken", res.data.accessToken);
+      sessionStorage.setItem("username", id);
       navigate('/')    
       navigate(0)
     }).catch(err => console.log(err))
