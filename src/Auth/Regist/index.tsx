@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Auth } from "../../api";
 import * as S from "./style";
 import { useRef, useState } from "react";
@@ -15,9 +16,13 @@ export default function Regist() {
   const passwordRef = useRef<HTMLInputElement>(null);
   const adressRef = useRef<HTMLInputElement>(null);
   const adressDetailRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   function authRegister(info: RegisterInfo) {
-    Auth.register(info).then(res => console.log(res)).catch(err => console.log(err))
+    Auth.register(info).then(res => {
+      navigate('/login')    
+      navigate(0)
+  }).catch(err => console.log(err))
   }
   return (
     <S.Wrap>
