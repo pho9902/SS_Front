@@ -12,8 +12,8 @@ export default function Login() {
     Auth.login(id, password).then(res => {
       sessionStorage.setItem("accessToken", res.data.accessToken);
       sessionStorage.setItem("username", id);
-      // navigate('/')    
-      // navigate(0)
+      navigate('/')    
+      navigate(0)
     }).catch(err => console.log(err))
   }
 
