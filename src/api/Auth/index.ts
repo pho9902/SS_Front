@@ -1,6 +1,7 @@
 import axios from "axios"
 
 export function login(id: string, password: string) {
+  console.log(process.env.REACT_APP_DOMAIN + '/auth/login')
     return axios({
         url: process.env.REACT_APP_DOMAIN + '/auth/login',
         method: 'POST',
