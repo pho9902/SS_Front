@@ -92,12 +92,15 @@ const Video = () => {
     <div className="flex flex-col gap-6">
       <div className="flex justify-center gap-2">
         <div className="flex flex-col items-center">
-          <div className="font-semibold">내 화면</div>
-          <video ref={localVideoRef} autoPlay playsInline muted></video>
+          {sessionStorage.getItem('username') === 'realad' ? <video ref={localVideoRef} autoPlay playsInline muted></video> : <div></div>
+          }
+          
         </div>
         <div className="flex flex-col items-center">
           <div className="font-semibold">상대 화면</div>
-          <video ref={remoteVideoRef} autoPlay playsInline></video>
+          {sessionStorage.getItem('username') === 'realad' ? <div></div> :
+          <video ref={remoteVideoRef} autoPlay playsInline></video>}
+          
         </div>
       </div>
       <div className="text-center font-semibold">Room Name: {room}</div>
