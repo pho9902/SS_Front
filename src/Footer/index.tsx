@@ -15,38 +15,38 @@ export default function Footer() {
   return (
     <S.Footer>
       {isToken ? 
-      <Link to="/login" style={{ textDecoration: "none" }}>
+      <Link to="/login" style={{ textDecoration: "none", flexGrow:1 , color: '#042626'}}>
       <S.BtnBox>
         <FaUser />
-        <S.EachFooterBtn>로그인</S.EachFooterBtn>
+        <S.EachFooterBtn>가입</S.EachFooterBtn>
       </S.BtnBox>
-    </Link> : <Link to="/mypage" style={{ textDecoration: "none" }}>
+    </Link> : <Link to="/mypage" style={{ textDecoration: "none", flexGrow:1 , color: '#042626'}}>
         <S.BtnBox>
           <FaUser />
-          <S.EachFooterBtn>마이페이지</S.EachFooterBtn>
+          <S.EachFooterBtn>정보</S.EachFooterBtn>
         </S.BtnBox>
       </Link>
     }
       
-      <Link to="/choice" style={{ textDecoration: "none" }}>
+      <Link to="/choice" style={{ textDecoration: "none", flexGrow:1, borderLeft: "1px dotted lightgray", color: '#042626'}}>
         <S.BtnBox>
           <FaListOl />
-          <S.EachFooterBtn>기기선택</S.EachFooterBtn>
+          <S.EachFooterBtn>기기</S.EachFooterBtn>
         </S.BtnBox>
       </Link>
-      <Link to="/" style={{ textDecoration: "none" }}>
+      <Link to="/" style={{ textDecoration: "none", flexGrow:1, borderLeft: "1px dotted lightgray" , color: '#042626'}}>
         <S.BtnBox>
           <FaHome />
-          <S.HomeBtnBox>홈</S.HomeBtnBox>
+          <S.EachFooterBtn>메인</S.EachFooterBtn>
         </S.BtnBox>
       </Link>
-      <Link to="/list" style={{ textDecoration: "none" }}>
+      <Link to="/list" style={{ textDecoration: "none", flexGrow:1, borderLeft: "1px dotted lightgray" , color: '#042626'}}>
         <S.BtnBox>
           <FaGift />
-          <S.EachFooterBtn>경품리스트</S.EachFooterBtn>
+          <S.EachFooterBtn>경품</S.EachFooterBtn>
         </S.BtnBox>
       </Link>
-      <Link to="/contact" style={{ textDecoration: "none" }}>
+      <Link to="/contact" style={{ textDecoration: "none", flexGrow:1, borderLeft: "1px dotted lightgray" , color: '#042626'}}>
         <S.BtnBox>
           <MdOutlineContactSupport />
           <S.EachFooterBtn>문의</S.EachFooterBtn>
