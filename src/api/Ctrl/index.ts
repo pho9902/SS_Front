@@ -17,7 +17,7 @@ export function moveCtrl(dir: string, status: string) {
     })
 }
 
-export function fallCtrl(userId: string) {
+export function fallCtrl() {
     return axios({
         url: process.env.REACT_APP_DOMAIN + '/ctrl/control',
         method: 'POST',
@@ -28,8 +28,8 @@ export function fallCtrl(userId: string) {
 
           },
           data: {
-            userId,
-            dir: 'fall'
+            dir: 'fall',
+            status: 'on'
           }
     })
 }

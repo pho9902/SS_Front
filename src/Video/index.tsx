@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 const VideoCall = () => {
@@ -7,6 +7,8 @@ const VideoCall = () => {
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const pcRef = useRef<RTCPeerConnection>();
+  
+  const navigate = useNavigate();
 
   const { roomName } = useParams();
 
@@ -84,10 +86,12 @@ const VideoCall = () => {
   };
 
   useEffect(() => {
-    
+    if(!sessionStorage.getItem('accessToken')) {
+      alert('게임 이용은 로그인 후 가능합니다.')
+      navigate(-1)
+    }
+
     socketRef.current = io(process.env.REACT_APP_DOMAIN);
-    // socketRef.current = io('http://3.88.191.23:8080');
-    
     
     pcRef.current = new RTCPeerConnection({
       iceServers: [
@@ -144,27 +148,28 @@ const VideoCall = () => {
 
   return (
     <div>
+      {sessionStorage.getItem('username') === 'realad' ? 
+      <video
+      id="remotevideo"
+      style={{
+        width: 240,
+        height: 369,
+        backgroundColor: "black",
+      }}
+      ref={myVideoRef}
+      autoPlay
+    /> :
       <video
         id="remotevideo"
         style={{
           width: 240,
-          height: 240,
-          backgroundColor: "black",
-        }}
-        ref={myVideoRef}
-        autoPlay
-      />
-      <span style={{background:'white'}}>상대영상</span>
-      <video
-        id="remotevideo"
-        style={{
-          width: 240,
-          height: 240,
+          height: 369,
           backgroundColor: "black",
         }}
         ref={remoteVideoRef}
         autoPlay
       />
+    } 
     </div>
   );
 };
