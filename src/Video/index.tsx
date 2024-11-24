@@ -1,130 +1,167 @@
-import React, { useEffect, useRef, useState } from 'react';
-import io, { Socket } from 'socket.io-client';
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { io, Socket } from "socket.io-client";
 
-const Video = () => {
-  const localVideoRef = useRef<HTMLVideoElement>(null);
+const VideoCall = () => {
+  const socketRef = useRef<Socket>();
+  const myVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const [isStartedVideo, setIsStartedVideo] = useState<boolean>(false);
-  const [room, setRoom] = useState<string>('test_room');
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(null);
+  const pcRef = useRef<RTCPeerConnection>();
+
+  const { roomName } = useParams();
+  console.log(roomName)
+
+  const getMedia = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      if (myVideoRef.current) {
+        myVideoRef.current.srcObject = stream;
+      }
+      if (!(pcRef.current && socketRef.current)) {
+        return;
+      }
+      stream.getTracks().forEach((track) => {
+        if (!pcRef.current) {
+          return;
+        }
+        pcRef.current.addTrack(track, stream);
+      });
+
+      pcRef.current.onicecandidate = (e) => {
+        if (e.candidate) {
+          if (!socketRef.current) {
+            return;
+          }
+          console.log("recv candidate");
+          socketRef.current.emit("candidate", e.candidate, roomName);
+        }
+      };
+
+      pcRef.current.ontrack = (e) => {
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = e.streams[0];
+        }
+      };
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const createOffer = async () => {
+    console.log("create Offer");
+    if (!(pcRef.current && socketRef.current)) {
+      return;
+    }
+    try {
+      const sdp = await pcRef.current.createOffer();
+      pcRef.current.setLocalDescription(sdp);
+      console.log("sent the offer");
+      socketRef.current.emit("offer", sdp, roomName);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const createAnswer = async (sdp: RTCSessionDescription) => {
+    console.log("createAnswer");
+    if (!(pcRef.current && socketRef.current)) {
+      return;
+    }
+
+    try {
+      pcRef.current.setRemoteDescription(sdp);
+      const answerSdp = await pcRef.current.createAnswer();
+      pcRef.current.setLocalDescription(answerSdp);
+
+      console.log("sent the answer");
+      socketRef.current.emit("answer", answerSdp, roomName);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
-    const nextSocket = io(process.env.REACT_APP_DOMAIN); // 자신의 시그널링 서버 IP 주소
-    setSocket(nextSocket);
+    socketRef.current = io(process.env.REACT_APP_DOMAIN);
 
-    // 구글에서 제공해주는 coturn 서버 활용
-    const pc = new RTCPeerConnection({
+    pcRef.current = new RTCPeerConnection({
       iceServers: [
         {
-          urls: 'stun:stun.l.google.com:19302',
-        },
-        {
-          urls: 'stun:stun1.l.google.com:19302',
-        },
-        {
-          urls: 'stun:stun2.l.google.com:19302',
-        },
-        {
-          urls: 'stun:stun3.l.google.com:19302',
+          urls: "stun:stun.l.google.com:19302",
         },
       ],
     });
 
-    pc.onicecandidate = (event) => {
-      if (!event.candidate) return;
-      nextSocket.emit('candidate', { candidate: event.candidate, room });
+    socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
+      if (allUsers.length > 0) {
+        createOffer();
+      }
+    });
+
+    socketRef.current.on("getOffer", (sdp: RTCSessionDescription) => {
+      console.log("recv Offer");
+      createAnswer(sdp);
+    });
+
+    socketRef.current.on("getAnswer", (sdp: RTCSessionDescription) => {
+      console.log("recv Answer");
+      if (!pcRef.current) {
+        return;
+      }
+      pcRef.current.setRemoteDescription(sdp);
+    });
+
+    socketRef.current.on("getCandidate", async (candidate: RTCIceCandidate) => {
+      if (!pcRef.current) {
+        return;
+      }
+
+      await pcRef.current.addIceCandidate(candidate);
+    });
+
+    socketRef.current.emit("join_room", {
+      room: roomName,
+    });
+
+    getMedia();
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+      if (pcRef.current) {
+        pcRef.current.close();
+      }
     };
-
-    pc.ontrack = (event) => {
-      if (!remoteVideoRef.current || !event.streams[0]) return;
-      remoteVideoRef.current.srcObject = event.streams[0];
-    };
-
-    nextSocket.on('offer', async (msg) => {
-      // 내가 보낸 offer인 경우, skip
-      if (msg.sender === socket?.id) return;
-
-      // connection에 상대 peer의 SDP 정보를 설정
-      await pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
-
-      // 설정 이후 상대 peer에게 나의 SDP 응답
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      nextSocket.emit('answer', { sdp: pc.localDescription, room });
-    });
-
-    nextSocket.on('answer', (msg) => {
-      if (msg.sender === socket?.id) return;
-      // connection에 상대 peer에게 받은 SDP 정보를 설정
-      pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
-    });
-
-    nextSocket.on('candidate', (msg) => {
-      if (msg.sender === socket?.id) return;
-      // 데이터를 보낼 수 있는 네트워크 경로를 찾기 위해 ICE 프로세스를 수행하는 단계
-      pc.addIceCandidate(new RTCIceCandidate(msg.candidate));
-    });
-
-    setPeerConnection(pc);
   }, []);
 
-  const startVideo = async () => {
-    if (!localVideoRef.current) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    localVideoRef.current.srcObject = stream;
-    stream.getTracks().forEach((track) => peerConnection?.addTrack(track, stream));
-    setIsStartedVideo(true);
-  };
-
-  const joinRoom = () => {
-    if (!socket || !room) return;
-    socket.emit('join', { room });
-  };
-
-  const call = async () => {
-    const offer = await peerConnection?.createOffer();
-    await peerConnection?.setLocalDescription(offer);
-    socket?.emit('offer', { sdp: offer, room });
-  };
-
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex justify-center gap-2">
-        <div className="flex flex-col items-center">
-          {sessionStorage.getItem('username') === 'realad' ? <video ref={localVideoRef} autoPlay playsInline muted></video> : <div></div>
-          }
-          
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="font-semibold">상대 화면</div>
-          {sessionStorage.getItem('username') === 'realad' ? <div></div> :
-          <video ref={remoteVideoRef} autoPlay playsInline></video>}
-          
-        </div>
-      </div>
-      <div className="text-center font-semibold">Room Name: {room}</div>
-      <div className="justify-center flex items-center gap-6">
-        {!isStartedVideo && (
-          <button
-            className="shadow-md px-3 py-2 rounded hover:bg-slate-50 active:shadow-none"
-            onClick={() => {
-              startVideo();
-              joinRoom();
-            }}
-          >
-            비디오 연결
-          </button>
-        )}
-        <button
-          className="shadow-md px-3 py-2 rounded hover:bg-slate-50 active:shadow-none"
-          onClick={call}
-        >
-          통화 시작
-        </button>
-      </div>
+    <div>
+      <video
+        id="remotevideo"
+        style={{
+          width: 240,
+          height: 240,
+          backgroundColor: "black",
+        }}
+        ref={myVideoRef}
+        autoPlay
+      />
+      <video
+        id="remotevideo"
+        style={{
+          width: 240,
+          height: 240,
+          backgroundColor: "black",
+        }}
+        ref={remoteVideoRef}
+        autoPlay
+      />
     </div>
   );
 };
 
-export default Video;
+export default VideoCall;

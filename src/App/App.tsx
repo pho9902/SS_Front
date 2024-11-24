@@ -15,7 +15,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/regist" element={<Auth.Regist />} />
-          <Route path="/choice" element={<Choice />} />
+          <Route path="/choice/:roomName" element={<Choice />} />
           <Route path="/machine/:machineNum" element={<Machine />} />
           <Route path="/login" element={<Auth.Login />} />
           <Route path="/mypage" element={<MyPage />} />
