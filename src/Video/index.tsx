@@ -9,7 +9,6 @@ const VideoCall = () => {
   const pcRef = useRef<RTCPeerConnection>();
 
   const { roomName } = useParams();
-  console.log(roomName)
 
   const getMedia = async () => {
     try {
@@ -85,8 +84,11 @@ const VideoCall = () => {
   };
 
   useEffect(() => {
+    
     socketRef.current = io(process.env.REACT_APP_DOMAIN);
-
+    // socketRef.current = io('http://3.88.191.23:8080');
+    
+    
     pcRef.current = new RTCPeerConnection({
       iceServers: [
         {
@@ -95,6 +97,7 @@ const VideoCall = () => {
       ],
     });
 
+    console.log(socketRef.current)
     socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
       if (allUsers.length > 0) {
         createOffer();
@@ -111,6 +114,7 @@ const VideoCall = () => {
       if (!pcRef.current) {
         return;
       }
+
       pcRef.current.setRemoteDescription(sdp);
     });
 
@@ -136,7 +140,7 @@ const VideoCall = () => {
         pcRef.current.close();
       }
     };
-  }, []);
+  }, [socketRef]);
 
   return (
     <div>
@@ -150,6 +154,7 @@ const VideoCall = () => {
         ref={myVideoRef}
         autoPlay
       />
+      <span style={{background:'white'}}>상대영상</span>
       <video
         id="remotevideo"
         style={{
