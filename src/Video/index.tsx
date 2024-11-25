@@ -14,24 +14,30 @@ const VideoCall = () => {
 
   const getMedia = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
+      if(sessionStorage.getItem('username') === 'realad') {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+  
+        if (myVideoRef.current) {
+          myVideoRef.current.srcObject = stream;
+        }
 
-      if (myVideoRef.current) {
-        myVideoRef.current.srcObject = stream;
+        stream.getTracks().forEach((track) => {
+          if (!pcRef.current) {
+            return;
+          }
+          pcRef.current.addTrack(track, stream);
+        });
+
       }
+      
+
       if (!(pcRef.current && socketRef.current)) {
         return;
       }
-      stream.getTracks().forEach((track) => {
-        if (!pcRef.current) {
-          return;
-        }
-        pcRef.current.addTrack(track, stream);
-      });
-
+    
       pcRef.current.onicecandidate = (e) => {
         if (e.candidate) {
           if (!socketRef.current) {
@@ -47,7 +53,8 @@ const VideoCall = () => {
           remoteVideoRef.current.srcObject = e.streams[0];
         }
       };
-    } catch (e) {
+    } 
+    catch (e) {
       console.error(e);
     }
   };
