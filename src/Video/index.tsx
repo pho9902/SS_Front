@@ -13,14 +13,11 @@ const VideoCall = () => {
   const { roomName } = useParams();
 
   const getMedia = async () => {
-    try {
-      if(sessionStorage.getItem('username') === 'realad') {
+    // try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
-
-        console.log(stream, 'stream')
   
         if (myVideoRef.current) {
           myVideoRef.current.srcObject = stream;
@@ -32,8 +29,6 @@ const VideoCall = () => {
           }
           pcRef.current.addTrack(track, stream);
         });
-
-      }
       
 
       if (!(pcRef.current && socketRef.current)) {
@@ -55,10 +50,10 @@ const VideoCall = () => {
           remoteVideoRef.current.srcObject = e.streams[0];
         }
       };
-    } 
-    catch (e) {
-      console.error(e);
-    }
+    // } 
+    // catch (e) {
+    //   console.error(e);
+    // }
   };
 
   const createOffer = async () => {
