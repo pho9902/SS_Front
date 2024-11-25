@@ -15,6 +15,7 @@ const VideoCall = () => {
   const getMedia = async () => {
     try {
       if(sessionStorage.getItem('username') === 'realad') {
+        console.log(navigator.mediaDevices, 'mediaDevices')
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
@@ -151,7 +152,7 @@ const VideoCall = () => {
         pcRef.current.close();
       }
     };
-  }, [socketRef]);
+  }, [pcRef,socketRef, getMedia]);
 
   return (
     <div>
