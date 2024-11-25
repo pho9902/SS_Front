@@ -15,7 +15,7 @@ const VideoCall = () => {
   const getMedia = async () => {
     try {
       if(sessionStorage.getItem('username') === 'realad') {
-        console.log(navigator.mediaDevices, 'mediaDevices')
+        console.log(navigator.mediaDevices.getUserMedia(), 'mediaDevices')
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
