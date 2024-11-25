@@ -101,7 +101,8 @@ const VideoCall = () => {
   };
 
   useEffect(() => {
-    socketRef.current = io("http://3.88.191.23:8080");
+    // socketRef.current = io("http://3.88.191.23:8080");
+    socketRef.current = io(process.env.REACT_APP_DOMAIN);
     
     pcRef.current = new RTCPeerConnection({
       iceServers: [
