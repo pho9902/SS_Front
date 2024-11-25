@@ -30,7 +30,10 @@ export default function Controller() {
             return;
         }
         if(dir === 'fall') {
-            fallCtrl().then(res => console.log(res)).catch(err => alert('개발자에게 문의해주세요')).finally(() => setIsStart(false))
+            fallCtrl().then(res => console.log(res)).catch(err => alert('개발자에게 문의해주세요')).finally(() => {
+                setIsStart(false)
+                myCoin()
+            })
             return;
         }
         moveCtrl(dir, status).then(res => console.log(res)).catch(err => alert('개발자에게 문의해주세요'))
@@ -38,13 +41,13 @@ export default function Controller() {
 
 
     function myCoin() {
-        Coin.getCoin().then(res => substrCoinleft(res.data)).finally(() => myCoin())
+        Coin.getCoin().then(res => substrCoinleft(res.data))
     }
 
 
     useEffect(() => {
         if(sessionStorage.getItem('username') !== 'realad') myCoin()
-    }, [myCoin])
+    }, [])
     
     return <>
         <S.Wrap>
