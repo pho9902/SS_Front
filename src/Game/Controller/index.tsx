@@ -43,8 +43,8 @@ export default function Controller() {
 
 
     useEffect(() => {
-        myCoin()
-    }, [setCoin, coin])
+        if(sessionStorage.getItem('username') !== 'realad') myCoin()
+    }, [myCoin])
     
     return <>
         <S.Wrap>
