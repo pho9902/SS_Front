@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
@@ -7,22 +7,26 @@ const VideoCall = () => {
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const pcRef = useRef<RTCPeerConnection>();
+  const isAdmin = sessionStorage.getItem('username') === 'realad'
+  const [stream, setStream] = useState<any>()
   
   const navigate = useNavigate();
 
   const { roomName } = useParams();
 
   const getMedia = async () => {
-    // try {
-        const stream = await navigator.mediaDevices.getUserMedia({
+    try {
+        const newStream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
+
+        setStream(newStream);
   
         if (myVideoRef.current) {
           myVideoRef.current.srcObject = stream;
         }
-
+        //@ts-ignore
         stream.getTracks().forEach((track) => {
           if (!pcRef.current) {
             return;
@@ -50,10 +54,10 @@ const VideoCall = () => {
           remoteVideoRef.current.srcObject = e.streams[0];
         }
       };
-    // } 
-    // catch (e) {
-    //   console.error(e);
-    // }
+    } 
+    catch (e) {
+      console.error(e);
+    }
   };
 
   const createOffer = async () => {
@@ -105,7 +109,6 @@ const VideoCall = () => {
       ],
     });
 
-    console.log(socketRef.current)
     socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
       if (allUsers.length > 0) {
         createOffer();
@@ -114,7 +117,9 @@ const VideoCall = () => {
 
     socketRef.current.on("getOffer", (sdp: RTCSessionDescription) => {
       console.log("recv Offer");
-      createAnswer(sdp);
+      if(isAdmin) {
+        createAnswer(sdp);
+      }
     });
 
     socketRef.current.on("getAnswer", (sdp: RTCSessionDescription) => {
@@ -148,32 +153,20 @@ const VideoCall = () => {
         pcRef.current.close();
       }
     };
-  }, [pcRef,socketRef, getMedia]);
+  }, [stream]);
 
   return (
     <div>
-      {sessionStorage.getItem('username') === 'realad' ? 
       <video
-      id="remotevideo"
+      id="videoRef"
       style={{
         width: 240,
         height: 369,
         backgroundColor: "black",
       }}
-      ref={myVideoRef}
+      ref={isAdmin ? myVideoRef : remoteVideoRef}
       autoPlay
-    /> :
-      <video
-        id="remotevideo"
-        style={{
-          width: 240,
-          height: 369,
-          backgroundColor: "black",
-        }}
-        ref={remoteVideoRef}
-        autoPlay
-      />
-    } 
+    />
     </div>
   );
 };
