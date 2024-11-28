@@ -94,8 +94,8 @@ const VideoCall = () => {
       <video
         id="video"
         style={{
-          width: 370,
-          height: 450,
+          width: 500,
+          height: 470,
           backgroundColor: "black",
         }}
         ref={videoRef}
