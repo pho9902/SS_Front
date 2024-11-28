@@ -20,7 +20,6 @@ export default function Controller() {
     }
 
     const handleBtn = (dir: string, status: string) => {
-        console.log('1')
         if(coin === '0') {
             alert('코인이 없습니다. 충전 페이지로 이동합니다.')
             navigate('/coin');
@@ -55,19 +54,19 @@ export default function Controller() {
             <S.ArrowWrap>
                 <S.ArrowFlow>
                     <S.TempItem />
-                    <LuArrowUp onTouchStart={() => handleBtn('forward', 'on')} onTouchEnd={() => handleBtn('forward', 'off')} size={44} onMouseDown={() => handleBtn('forward', 'on')} style={{ flexGrow: 1}} onMouseUp={() => handleBtn('forward', 'off')} />
+                    <LuArrowUp onTouchStart={() => handleBtn('forward', 'on')} onTouchEnd={() => handleBtn('forward', 'off')} size={44} style={{ flexGrow: 1}} />
                     <S.TempItem />
                 </S.ArrowFlow>  
 
                 <S.ArrowFlow>
-                    <LuArrowLeft onTouchStart={() => handleBtn('left', 'on')} onTouchEnd={() => handleBtn('left', 'off')} size={44} onMouseDown={() => handleBtn('left', 'on')} style={{ flexGrow: 1}} onMouseUp={() => handleBtn('left', 'off')} />
+                    <LuArrowLeft onTouchStart={() => handleBtn('left', 'on')} onTouchEnd={() => handleBtn('left', 'off')} size={44} style={{ flexGrow: 1}} />
                     <S.TempItem />
-                    <LuArrowRight onTouchStart={() => handleBtn('right', 'on')} onTouchEnd={() => handleBtn('right', 'off')} size={44} onMouseDown={() => handleBtn('right', 'on')} style={{ flexGrow: 1}} onMouseUp={() => handleBtn('right', 'off')} />
+                    <LuArrowRight onTouchStart={() => handleBtn('right', 'on')} onTouchEnd={() => handleBtn('right', 'off')} size={44}  style={{ flexGrow: 1}} />
                 </S.ArrowFlow>  
 
                 <S.ArrowFlow>
                     <S.TempItem />
-                    <LuArrowDown onTouchStart={() => handleBtn('back', 'on')} onTouchEnd={() => handleBtn('back', 'off')} size={44} onMouseDown={() => handleBtn('back', 'on')} style={{ flexGrow: 1}} onMouseUp={() => handleBtn('back', 'off')} />
+                    <LuArrowDown onTouchStart={() => handleBtn('back', 'on')} onTouchEnd={() => handleBtn('back', 'off')} size={44} style={{ flexGrow: 1}} />
                     <S.TempItem />
                 </S.ArrowFlow>
 
