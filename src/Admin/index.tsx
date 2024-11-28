@@ -117,8 +117,8 @@ export default function Admin() {
       <video
         id="remotevideo"
         style={{
-          width: 240,
-          height: 240,
+          width: 370,
+          height: 450,
           backgroundColor: "black",
         }}
         ref={myVideoRef}
