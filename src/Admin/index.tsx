@@ -122,7 +122,9 @@ export default function Admin() {
           backgroundColor: "black",
         }}
         ref={myVideoRef}
-        autoPlay
+        muted 
+        autoPlay 
+        playsInline
       />
     </div>
   );

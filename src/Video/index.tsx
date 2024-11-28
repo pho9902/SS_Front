@@ -99,7 +99,9 @@ const VideoCall = () => {
           backgroundColor: "black",
         }}
         ref={videoRef}
-        autoPlay
+        muted 
+        autoPlay 
+        playsInline
       />
     </div>
   );
