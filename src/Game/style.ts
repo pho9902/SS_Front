@@ -74,3 +74,15 @@ export const TempBox = styled.div`
   align-items: center;
   height: 100%
 `
+
+export const FirstBtn = styled.div`
+  border: 1px solid black;
+  font-size: xx-large;
+  font-weight: bold;
+  padding: 5px;
+  width: 22vw;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`

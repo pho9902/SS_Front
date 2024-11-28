@@ -88,7 +88,7 @@ export default function Game() {
               <S.Temp1 />
             </S.TempBox>
           </S.ArrowFlow>
-        </S.ControllerWrap> : <div onClick={() => setIsStart(!isStart)}>Start</div>}
+        </S.ControllerWrap> : <S.FirstBtn onClick={() => setIsStart(!isStart)}>Start!</S.FirstBtn>}
       </S.Controller>
     </S.Wrap>
 }
