@@ -125,6 +125,8 @@ export default function Admin() {
         muted={true}
         autoPlay={true} 
         playsInline={true}
+        controls={false}
+        // loop={false}
       />
     </div>
   );
