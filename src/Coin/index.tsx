@@ -22,7 +22,7 @@ export default function Coin() {
     useEffect(() => {
         if(!sessionStorage.getItem('accessToken')) {
             alert('로그인 후 이용 해 주세요');
-            navigate(-1);
+            navigate('/');
         }
         myCoin();
         

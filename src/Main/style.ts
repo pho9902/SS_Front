@@ -27,7 +27,6 @@ export const SndContainer = styled.div`
 export const IntroBox = styled.div`
   width: 120px;
   height: 90px;
-  margin: 14px;
   border-radius: 10%;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   display: flex;

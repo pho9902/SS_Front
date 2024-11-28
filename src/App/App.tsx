@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as S from "./style";
-
 import Main from "../Main";
 import Game from "../Game";
 import * as Auth from "../Auth";

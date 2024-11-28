@@ -59,8 +59,8 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    // setSocket(io("http://3.88.191.23:8080"))
-    setSocket(io(process.env.REACT_APP_DOMAIN))
+    setSocket(io("http://3.88.191.23:8080"))
+    // setSocket(io(process.env.REACT_APP_DOMAIN))
   }, [setSocket])
   useEffect(() => {
     pcRef.current = new RTCPeerConnection({
@@ -117,9 +117,9 @@ export default function Admin() {
       <video
         id="remotevideo"
         style={{
-          width: 500,
-          height: 470,
-          backgroundColor: "black",
+          width: '100%',
+          backgroundColor: "white",
+          border: '1px solid red'
         }}
         ref={myVideoRef}
         muted={true}

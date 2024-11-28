@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
+import * as S from './style';
 
 const VideoCall = () => {
   const [socket, setSocket] = useState<Socket | null>(null)
@@ -27,8 +28,8 @@ const VideoCall = () => {
   };
 
   useEffect(() => {
-    // setSocket(io("http://3.88.191.23:8080"))
-    setSocket(io(process.env.REACT_APP_DOMAIN))
+    setSocket(io("http://3.88.191.23:8080"))
+    // setSocket(io(process.env.REACT_APP_DOMAIN))
   },[setSocket])
 
   useEffect(() => {
@@ -90,12 +91,12 @@ const VideoCall = () => {
   }, [socket, pcRef])
 
   return (
-    <div>
+    <S.Wrap>
       <video
         id="video"
         style={{
-          width: 500,
-          height: 470,
+          width: '100%',
+          height: '230px',
           backgroundColor: "black",
         }}
         ref={videoRef}
@@ -105,7 +106,7 @@ const VideoCall = () => {
         controls={false}
         // loop={false}
       />
-    </div>
+    </S.Wrap>
   );
 };
 

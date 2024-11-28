@@ -14,13 +14,13 @@ export default function Main() {
 
     <S.SndContainer>
       <S.BoxWrapper>
-      <Link to="/coin" style={{ textDecoration: "none", color: '#042626'}}>
+      <Link to="/coin" style={{ margin: '14px', borderRadius: '10%', textDecoration: "none", color: '#042626', backgroundColor: 'white'}}>
           <S.IntroBox>
             <TbBrandCoinbase size={37} />
             <S.ExplainBox>코인 충전</S.ExplainBox>
           </S.IntroBox>
         </Link>
-        <Link to="/game/1" style={{ textDecoration: "none", color: '#042626'}}>
+        <Link to="/game/1" style={{ margin: '14px', borderRadius: '10%',  textDecoration: "none", color: '#042626', backgroundColor: 'white'}}>
           <S.IntroBox>
             <LuJoystick size={37} />
             <S.ExplainBox>게임하러 가기</S.ExplainBox>
@@ -28,13 +28,17 @@ export default function Main() {
         </Link>
       </S.BoxWrapper>
       <S.BoxWrapper>
-        <Link to="/list" style={{ textDecoration: "none", color: '#042626'}}>
+        <Link to="/list" style={{ margin: '14px', borderRadius: '10%',  textDecoration: "none", color: '#042626', backgroundColor: 'white'}}>
           <S.IntroBox>
             <FaGift size={37} />
             <S.ExplainBox>경품 리스트</S.ExplainBox>
           </S.IntroBox>
         </Link>
-        <div onClick={() => window.open('https://www.google.co.kr/')} style={{ textDecoration: "none", color: '#042626'}}>
+        <div onClick={(e) => {
+              window.open('https://store.kakao.com/kakaofriends')
+              e.stopPropagation();
+            }
+          } style={{ margin: '14px', borderRadius: '10%',  textDecoration: "none", color: '#042626', backgroundColor: 'white'}}>
           <S.IntroBox>
             <IoCartOutline size={37} />
             <S.ExplainBox>구매</S.ExplainBox>
