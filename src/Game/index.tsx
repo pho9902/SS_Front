@@ -71,7 +71,11 @@ export default function Game() {
             </S.TempBox>
           </S.ArrowFlow>
           <S.ArrowFlow>
-            <LuArrowLeft style={{flexGrow: 1}} onTouchStart={() => handleBtn('left', 'on')} onTouchEnd={() => handleBtn('left', 'off')} size={44} />  
+            <LuArrowLeft style={{flexGrow: 1}} onTouchStart={(e) => {
+              handleBtn('left', 'on')
+              e.preventDefault()
+                }
+              } onTouchEnd={() => handleBtn('left', 'off')} size={44} />  
             <S.FallBtn style={{flexGrow:1}} onClick={() => handleBtn('fall', 'on')} >
               <h3>
                 Fall!
