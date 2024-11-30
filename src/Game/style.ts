@@ -51,6 +51,10 @@ export const ArrowFlow = styled.div`
   justify-content: center;
   align-items: center;
   height: 13vh;
+
+  * {
+  user-select: none;
+  }
 `
 
 export const Temp1 = styled.div`
