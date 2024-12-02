@@ -28,8 +28,8 @@ const VideoCall = () => {
   };
 
   useEffect(() => {
-    setSocket(io("http://3.88.191.23:8080"))
-    // setSocket(io(process.env.REACT_APP_DOMAIN))
+    // setSocket(io("http://3.88.191.23:8080"))
+    setSocket(io(process.env.REACT_APP_DOMAIN))
   },[setSocket])
 
   useEffect(() => {

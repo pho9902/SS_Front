@@ -54,8 +54,8 @@ export default function Admin() {
       alert('관리자만 접근 가능한 페이지입니다.')
       navigate('/')
     }
-    setSocket(io("http://3.88.191.23:8080"))
-    // setSocket(io(process.env.REACT_APP_DOMAIN))
+    // setSocket(io("http://3.88.191.23:8080"))
+    setSocket(io(process.env.REACT_APP_DOMAIN))
 
   }, [setSocket])
   useEffect(() => {
