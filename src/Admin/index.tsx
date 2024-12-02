@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 export default function Admin() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const pcRef = useRef<RTCPeerConnection>();
+  const navigate = useNavigate()
 
   const { roomName } = useParams();
 
@@ -28,16 +29,6 @@ export default function Admin() {
         pcRef.current.addTrack(track, stream);
       });
 
-      pcRef.current.onicecandidate = (e) => {
-        if (e.candidate) {
-          if (!socket) {
-            return;
-          }
-          console.log("recv candidate");
-          socket.emit("candidate", e.candidate, roomName);
-        }
-      };
-
     } catch (e) {
       console.error(e);
     }
@@ -59,16 +50,30 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    // setSocket(io("http://3.88.191.23:8080"))
-    setSocket(io(process.env.REACT_APP_DOMAIN))
+    if(sessionStorage.getItem('username') !== 'realad') {
+      alert('관리자만 접근 가능한 페이지입니다.')
+      navigate('/')
+    }
+    setSocket(io("http://3.88.191.23:8080"))
+    // setSocket(io(process.env.REACT_APP_DOMAIN))
+
   }, [setSocket])
   useEffect(() => {
     pcRef.current = new RTCPeerConnection({
       iceServers: [
         {
-          urls: "stun:stun.l.google.com:19302",
+          urls: 'stun:stun.l.google.com:19302',
         },
-      ],
+        {
+          urls: 'stun:stun1.l.google.com:19302',
+        },
+        {
+          urls: 'stun:stun2.l.google.com:19302',
+        },
+        {
+          urls: 'stun:stun3.l.google.com:19302',
+        },
+      ]
     });
 
     if(socket) {
@@ -90,6 +95,16 @@ export default function Admin() {
       }
       pcRef.current.setRemoteDescription(sdp);
     });
+
+    pcRef.current.onicecandidate = (e) => {
+      if (e.candidate) {
+        if (!socket) {
+          return;
+        }
+        console.log("recv candidate");
+        socket.emit("candidate", e.candidate, roomName);
+      }
+    };
 
     socket.on("getCandidate", async (candidate: RTCIceCandidate) => {
       if (!pcRef.current) {

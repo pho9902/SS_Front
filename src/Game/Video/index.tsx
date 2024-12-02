@@ -28,21 +28,29 @@ const VideoCall = () => {
   };
 
   useEffect(() => {
-    // setSocket(io("http://3.88.191.23:8080"))
-    setSocket(io(process.env.REACT_APP_DOMAIN))
+    setSocket(io("http://3.88.191.23:8080"))
+    // setSocket(io(process.env.REACT_APP_DOMAIN))
   },[setSocket])
 
   useEffect(() => {
     pcRef.current = new RTCPeerConnection({
       iceServers: [
         {
-          urls: "stun:stun.l.google.com:19302",
+          urls: 'stun:stun.l.google.com:19302',
         },
-      ],
+        {
+          urls: 'stun:stun1.l.google.com:19302',
+        },
+        {
+          urls: 'stun:stun2.l.google.com:19302',
+        },
+        {
+          urls: 'stun:stun3.l.google.com:19302',
+        },
+      ]
     });
 
     if(socket) {
-
     socket.emit("join_room", {
       room: roomName,
     });
@@ -51,9 +59,7 @@ const VideoCall = () => {
       console.log("recv Offer");
       createAnswer(sdp);
     });
-  
-
-
+    
     pcRef.current.onicecandidate = (e) => {
       if (e.candidate) {
         if (!socket) {
