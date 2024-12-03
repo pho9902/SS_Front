@@ -55,11 +55,6 @@ const VideoCall = () => {
       room: roomName,
     });
 
-    socket.on("getOffer", (sdp: RTCSessionDescription) => {
-      console.log("recv Offer");
-      createAnswer(sdp);
-    });
-    
     pcRef.current.onicecandidate = (e) => {
       if (e.candidate) {
         if (!socket) {
@@ -77,7 +72,11 @@ const VideoCall = () => {
 
       await pcRef.current.addIceCandidate(candidate);
     });
-    
+
+    socket.on("getOffer", (sdp: RTCSessionDescription) => {
+      console.log("recv Offer");
+      createAnswer(sdp);
+    });
 
     pcRef.current.ontrack = (e) => {
       if (videoRef.current) {

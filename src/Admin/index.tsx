@@ -80,6 +80,24 @@ export default function Admin() {
     socket.emit("join_room", {
         room: roomName,
       });
+   
+      pcRef.current.onicecandidate = (e) => {
+        if (e.candidate) {
+          if (!socket) {
+            return;
+          }
+          console.log("recv candidate");
+          socket.emit("candidate", e.candidate, roomName);
+        }
+      };
+  
+      socket.on("getCandidate", async (candidate: RTCIceCandidate) => {
+        if (!pcRef.current) {
+          return;
+        }
+  
+        await pcRef.current.addIceCandidate(candidate);
+      });
 
     socket.on("all_users", (allUsers: Array<{ id: string }>) => {
       if (allUsers.length > 0) {
@@ -94,24 +112,6 @@ export default function Admin() {
         return;
       }
       pcRef.current.setRemoteDescription(sdp);
-    });
-
-    pcRef.current.onicecandidate = (e) => {
-      if (e.candidate) {
-        if (!socket) {
-          return;
-        }
-        console.log("recv candidate");
-        socket.emit("candidate", e.candidate, roomName);
-      }
-    };
-
-    socket.on("getCandidate", async (candidate: RTCIceCandidate) => {
-      if (!pcRef.current) {
-        return;
-      }
-
-      await pcRef.current.addIceCandidate(candidate);
     });
 }
 
